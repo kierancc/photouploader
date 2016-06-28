@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PhotoUploader
@@ -33,6 +25,41 @@ namespace PhotoUploader
                 {
                     lbPhotos.Items.Add(new PhotoDetail(filename));
                 }
+            }
+        }
+
+        private void lbPhotos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pbPreview.Image = ((PhotoDetail)lbPhotos.SelectedItem).Preview;
+        }
+
+        private void btnUpload_Click(object sender, EventArgs e)
+        {   
+            foreach (PhotoDetail pd in lbPhotos.Items)
+            {
+                // First load the GPS coordinates of each photo
+                try
+                {
+                    GPSHelper.GetGPSCoordinates(pd);
+                }
+                catch (Exception ex)
+                {
+                    //TODO: log this somewhere
+                    continue;
+                }
+
+                // Next upload the photo to the server
+                try
+                {
+                    FTPHelper.UploadFileToServer(FTPHelper.BuildRemoteFQPath(pd.FileName), pd.FQPath);
+                }
+                catch (Exception ex)
+                {
+                    //TODO: log this somewhere
+                    continue;
+                }
+
+                // Next update the DB table with associated photo metadata
             }
         }
     }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace PhotoUploader
@@ -12,6 +8,8 @@ namespace PhotoUploader
         protected String fileName;
         protected String path;
         protected String fqPath;
+        protected double latitude;
+        protected double longitude;
         protected Bitmap preview;
 
         public PhotoDetail(String fqpath)
@@ -20,6 +18,8 @@ namespace PhotoUploader
             int lastSlash = fqpath.LastIndexOf('\\');
             path = fqpath.Substring(0, lastSlash);
             fileName = fqpath.Substring(lastSlash + 1);
+            latitude = 0;
+            longitude = 0;
             preview = null; // We will lazy load these
         }
 
@@ -41,13 +41,25 @@ namespace PhotoUploader
             set { fqPath = value; }
         }
 
+        public double Latitude
+        {
+            get { return latitude; }
+            set { latitude = value; }
+        }
+
+        public double Longitude
+        {
+            get { return longitude; }
+            set { longitude = value; }
+        }
+
         public Bitmap Preview
         {
             get
             {
                 if (preview == null)
                 {
-                    preview = new Bitmap(path + "\\" + fileName);
+                    preview = new Bitmap(fqPath);
                 }
 
                 return preview;

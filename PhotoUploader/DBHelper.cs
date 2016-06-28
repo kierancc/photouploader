@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace PhotoUploader
 {
-    public class MainController
+    public class DBHelper
     {
-
-        public MainController()
-        {
-
-        }
     }
 }

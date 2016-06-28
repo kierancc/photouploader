@@ -60,6 +60,16 @@ namespace PhotoUploader
                 }
 
                 // Next update the DB table with associated photo metadata
+                //try
+                //{
+                    DBHelper.InsertGPSCoordinates(pd);
+                //}
+                //catch (Exception ex)
+                //{
+                    //TODO: log this somewhere
+                    //TODO: if inserting the photo data to DB fails we should delete the photo
+                    //continue;
+                //}
             }
         }
     }

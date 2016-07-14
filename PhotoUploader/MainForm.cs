@@ -37,6 +37,7 @@ namespace PhotoUploader
         {   
             foreach (PhotoDetail pd in lbPhotos.Items)
             {
+                Console.Write("Processing file: " + pd.FileName + " ...");
                 // First load the GPS coordinates of each photo
                 try
                 {
@@ -44,7 +45,20 @@ namespace PhotoUploader
                 }
                 catch (Exception ex)
                 {
-                    //TODO: log this somewhere
+                    Console.WriteLine();
+                    Console.WriteLine("Failed to get GPS coordinates. ex: " + ex.Message);
+                    continue;
+                }
+
+                // Next, get location by reverse geocoding
+                try
+                {
+                    GPSHelper.GetClosestLocationData(pd);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Failed to perform geocoding reverse lookup. ex: " + ex.Message);
                     continue;
                 }
 
@@ -55,21 +69,25 @@ namespace PhotoUploader
                 }
                 catch (Exception ex)
                 {
-                    //TODO: log this somewhere
+                    Console.WriteLine();
+                    Console.WriteLine("Failed to upload photo to server. ex: " + ex.Message);
                     continue;
                 }
 
                 // Next update the DB table with associated photo metadata
-                //try
-                //{
-                    DBHelper.InsertGPSCoordinates(pd);
-                //}
-                //catch (Exception ex)
-                //{
-                    //TODO: log this somewhere
+                try
+                {
+                    DBHelper.InsertPhotoMetadata(pd);
+                }
+                catch (Exception ex)
+                {
                     //TODO: if inserting the photo data to DB fails we should delete the photo
-                    //continue;
-                //}
+                    Console.WriteLine();
+                    Console.WriteLine("Failed to insert photo metadata to database. ex: " + ex.Message);
+                    continue;
+                }
+
+                Console.WriteLine(" Complete");
             }
         }
     }

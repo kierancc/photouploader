@@ -11,6 +11,7 @@ namespace PhotoUploader
         protected double latitude;
         protected double longitude;
         protected Bitmap preview;
+        protected String location;
 
         public PhotoDetail(String fqpath)
         {
@@ -66,6 +67,12 @@ namespace PhotoUploader
             }
 
             set { preview = value; }
+        }
+
+        public String Location
+        {
+            get { return location; }
+            set { location = value; }
         }
     }
 }

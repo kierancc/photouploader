@@ -36,13 +36,14 @@ namespace PhotoUploader
             }
         }
 
-        public static void InsertGPSCoordinates(PhotoDetail photo)
+        public static void InsertPhotoMetadata(PhotoDetail photo)
         {
-            String insertQuery = "INSERT INTO `photos`(`filename`, `latitude`, `longitude`) VALUES (@filename,@latitude,@longitude)";
-            MySqlParameter[] insertParams = new MySqlParameter[3];
+            String insertQuery = "INSERT INTO `photos`(`filename`, `latitude`, `longitude`, `locationstring`) VALUES (@filename,@latitude,@longitude,@locationstring)";
+            MySqlParameter[] insertParams = new MySqlParameter[4];
             insertParams[0] = new MySqlParameter("@filename", photo.FileName);
             insertParams[1] = new MySqlParameter("@latitude", photo.Latitude);
             insertParams[2] = new MySqlParameter("@longitude", photo.Longitude);
+            insertParams[3] = new MySqlParameter("@locationstring", photo.Location);
 
             int rc = MySqlHelper.ExecuteNonQuery(ConnectionString, insertQuery, insertParams);
         }

@@ -18,92 +18,93 @@ namespace PhotoUploader
             int longitudeDirection = int.MinValue;
             bool allInfoFound = false;
 
-            Image img = photo.Preview;
-
-            PropertyItem[] propertyItems = img.PropertyItems;
-
-            foreach (PropertyItem item in propertyItems)
+            using (Image img = photo.Preview)
             {
-                // Determine Latitute (0x0002) or Longitude (0x0004)
-                if (item.Id == 0x0002 || item.Id == 0x0004)
+                PropertyItem[] propertyItems = img.PropertyItems;
+
+                foreach (PropertyItem item in propertyItems)
                 {
-                    Double[] coordiantes = new Double[3];
-
-                    for (int j = 0; j < 3; j++)
+                    // Determine Latitute (0x0002) or Longitude (0x0004)
+                    if (item.Id == 0x0002 || item.Id == 0x0004)
                     {
-                        byte[] num = new byte[4];
-                        byte[] den = new byte[4];
+                        Double[] coordiantes = new Double[3];
 
-                        Array.Copy(item.Value, 0 + 8 * j, num, 0, 4);
-                        Array.Copy(item.Value, 4 + 8 * j, den, 0, 4);
+                        for (int j = 0; j < 3; j++)
+                        {
+                            byte[] num = new byte[4];
+                            byte[] den = new byte[4];
 
-                        Int32 numerator = BitConverter.ToInt32(num, 0);
-                        Int32 denominator = BitConverter.ToInt32(den, 0);
+                            Array.Copy(item.Value, 0 + 8 * j, num, 0, 4);
+                            Array.Copy(item.Value, 4 + 8 * j, den, 0, 4);
 
-                        coordiantes[j] = (double)numerator / (double)denominator;
+                            Int32 numerator = BitConverter.ToInt32(num, 0);
+                            Int32 denominator = BitConverter.ToInt32(den, 0);
+
+                            coordiantes[j] = (double)numerator / (double)denominator;
+                        }
+
+                        // Now convert the coordinates into degrees (with decimals) only
+                        Double degrees = coordiantes[0] + coordiantes[1] / 60.0 + coordiantes[2] / 3600.0;
+
+                        if (item.Id == 0x0002)
+                        {
+                            latitude = degrees;
+                        }
+                        else
+                        {
+                            longitude = degrees;
+                        }
+                    }
+                    // Determine direction for Latitude (0x0001) or Longitude (0x0003)
+                    else if (item.Id == 0x0001 || item.Id == 0x0003)
+                    {
+                        String value = Encoding.ASCII.GetString(item.Value).Trim('\0');
+
+                        if (String.Compare(value, "N", true) == 0)
+                        {
+                            latitudeDirection = 1;
+                        }
+                        else if (String.Compare(value, "S", true) == 0)
+                        {
+                            latitudeDirection = -1;
+                        }
+                        else if (String.Compare(value, "E", true) == 0)
+                        {
+                            longitudeDirection = 1;
+                        }
+                        else if (String.Compare(value, "W", true) == 0)
+                        {
+                            longitudeDirection = -1;
+                        }
+                        else
+                        {
+                            throw new Exception("Invalid Latitude or Longitude reference: \"" + value + "\"");
+                        }
                     }
 
-                    // Now convert the coordinates into degrees (with decimals) only
-                    Double degrees = coordiantes[0] + coordiantes[1] / 60.0 + coordiantes[2] / 3600.0;
-
-                    if (item.Id == 0x0002)
+                    // Break early if all values are found
+                    if (latitude != Double.MinValue && longitude != Double.MinValue && latitudeDirection != int.MinValue && longitudeDirection != int.MinValue)
                     {
-                        latitude = degrees;
-                    }
-                    else
-                    {
-                        longitude = degrees;
+                        allInfoFound = true;
+                        break;
                     }
                 }
-                // Determine direction for Latitude (0x0001) or Longitude (0x0003)
-                else if (item.Id == 0x0001 || item.Id == 0x0003)
+
+                // Only proceed if all required info was found
+                if (allInfoFound)
                 {
-                    String value = Encoding.ASCII.GetString(item.Value).Trim('\0');
+                    // Combine degrees and direction
+                    latitude *= latitudeDirection;
+                    longitude *= longitudeDirection;
 
-                    if (String.Compare(value, "N", true) == 0)
-                    {
-                        latitudeDirection = 1;
-                    }
-                    else if (String.Compare(value, "S", true) == 0)
-                    {
-                        latitudeDirection = -1;
-                    }
-                    else if (String.Compare(value, "E", true) == 0)
-                    {
-                        longitudeDirection = 1;
-                    }
-                    else if (String.Compare(value, "W", true) == 0)
-                    {
-                        longitudeDirection = -1;
-                    }
-                    else
-                    {
-                        throw new Exception("Invalid Latitude or Longitude reference: \"" + value + "\"");
-                    }
+                    // Save the latitude and longitude
+                    photo.Latitude = latitude;
+                    photo.Longitude = longitude;
                 }
-
-                // Break early if all values are found
-                if (latitude != Double.MinValue && longitude != Double.MinValue && latitudeDirection != int.MinValue && longitudeDirection != int.MinValue)
+                else
                 {
-                    allInfoFound = true;
-                    break;
+                    throw new Exception("Failed to determine GPS coordinates");
                 }
-            }
-
-            // Only proceed if all required info was found
-            if (allInfoFound)
-            {
-                // Combine degrees and direction
-                latitude *= latitudeDirection;
-                longitude *= longitudeDirection;
-
-                // Save the latitude and longitude
-                photo.Latitude = latitude;
-                photo.Longitude = longitude;
-            }
-            else
-            {
-                throw new Exception("Failed to determine GPS coordinates");
             }
         }
 
@@ -114,19 +115,24 @@ namespace PhotoUploader
             String requestURL = String.Format(ConfigurationManager.AppSettings["GPSReverseGeocodingLookupURL"], latlng);
 
             // Make the request
-            HttpClient request = new HttpClient();
-            var response = request.GetAsync(requestURL).Result;
-
-            if (response.IsSuccessStatusCode)
+            using (HttpClient request = new HttpClient())
             {
-                var responseContent = response.Content;
-                String responseString = responseContent.ReadAsStringAsync().Result;
-                Location resultLocation = JsonConvert.DeserializeObject<Location>(responseString);
-                photo.Location = resultLocation.GetLocation();
-            }
-            else // Reverse geocoding request failed
-            {
-                throw new Exception("Reverse geocoding request failed with status code: " + response.StatusCode);
+                using (var response = request.GetAsync(requestURL).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (var responseContent = response.Content)
+                        {
+                            String responseString = responseContent.ReadAsStringAsync().Result;
+                            Location resultLocation = JsonConvert.DeserializeObject<Location>(responseString);
+                            photo.Location = resultLocation.GetLocation();
+                        }
+                    }
+                    else // Reverse geocoding request failed
+                    {
+                        throw new Exception("Reverse geocoding request failed with status code: " + response.StatusCode);
+                    }
+                }
             }
         }
     }

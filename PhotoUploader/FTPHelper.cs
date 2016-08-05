@@ -14,12 +14,26 @@ namespace PhotoUploader
         private string fileName;
         private Exception operationException = null;
         string status;
+        private Stream requestStream;
 
         public FTPState()
         {
             wait = new ManualResetEvent(false);
         }
 
+        ~FTPState()
+        {
+            wait.Dispose();
+            requestStream.Dispose();
+            request.Abort();
+            request = null;
+        }
+
+        public Stream RequestStream
+        {
+            set { requestStream = value; }
+        }
+        
         public ManualResetEvent OperationComplete
         {
             get { return wait; }
@@ -94,6 +108,8 @@ namespace PhotoUploader
             // Set credentials
             request.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["FTPAccount"], ConfigurationManager.AppSettings["FTPPassword"]);
 
+            request.KeepAlive = false;
+
             // Store the request in the object that we pass into the
             // asynchronous operations.
             state.Request = request;
@@ -130,6 +146,7 @@ namespace PhotoUploader
             try
             {
                 requestStream = state.Request.EndGetRequestStream(ar);
+                state.RequestStream = requestStream;
                 // Copy the file contents to the request stream.
                 const int bufferLength = 2048;
                 byte[] buffer = new byte[bufferLength];
@@ -146,6 +163,7 @@ namespace PhotoUploader
                 Console.WriteLine("Writing {0} bytes to the stream.", count);
                 // IMPORTANT: Close the request stream before sending the request.
                 requestStream.Close();
+                stream.Dispose();
                 // Asynchronously get the response to the upload request.
                 state.Request.BeginGetResponse(
                     new AsyncCallback(EndGetResponseCallback),
@@ -174,6 +192,7 @@ namespace PhotoUploader
                 response = (FtpWebResponse)state.Request.EndGetResponse(ar);
                 response.Close();
                 state.StatusDescription = response.StatusDescription;
+                response.Dispose();
                 // Signal the main application thread that 
                 // the operation is complete.
                 state.OperationComplete.Set();

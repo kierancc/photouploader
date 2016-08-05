@@ -15,8 +15,6 @@ namespace PhotoUploader
         private void btnLoadPhotos_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = "c:\\";
-            dialog.RestoreDirectory = true;
             dialog.Multiselect = true;
 
             if (dialog.ShowDialog() == DialogResult.OK)

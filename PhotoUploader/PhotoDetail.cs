@@ -12,6 +12,7 @@ namespace PhotoUploader
         protected double longitude;
         protected Bitmap preview;
         protected String location;
+        protected String tags;
 
         public PhotoDetail(String fqpath)
         {
@@ -22,6 +23,14 @@ namespace PhotoUploader
             latitude = 0;
             longitude = 0;
             preview = null; // We will lazy load these
+        }
+
+        ~PhotoDetail()
+        {
+            if (null != preview)
+            {
+                preview.Dispose();
+            }
         }
 
         public String FileName
@@ -73,6 +82,12 @@ namespace PhotoUploader
         {
             get { return location; }
             set { location = value; }
+        }
+
+        public String Tags
+        {
+            get { return tags; }
+            set { tags = value; }
         }
     }
 }

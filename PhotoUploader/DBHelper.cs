@@ -38,13 +38,13 @@ namespace PhotoUploader
 
         public static void InsertPhotoMetadata(PhotoDetail photo)
         {
-            String insertQuery = "INSERT INTO `photos`(`filename`, `latitude`, `longitude`, `locationstring`, `tags`) VALUES (@filename,@latitude,@longitude,@locationstring,@tags)";
+            String insertQuery = "INSERT INTO `photos`(`filename`, `latitude`, `longitude`, `locationstring`, `tagsstring`) VALUES (@filename,@latitude,@longitude,@locationstring,@tagsstring)";
             MySqlParameter[] insertParams = new MySqlParameter[5];
             insertParams[0] = new MySqlParameter("@filename", photo.FileName);
             insertParams[1] = new MySqlParameter("@latitude", photo.Latitude);
             insertParams[2] = new MySqlParameter("@longitude", photo.Longitude);
             insertParams[3] = new MySqlParameter("@locationstring", photo.Location);
-            insertParams[4] = new MySqlParameter("@tags", photo.Tags);
+            insertParams[4] = new MySqlParameter("@tagsstring", photo.Tags);
 
             int rc = MySqlHelper.ExecuteNonQuery(ConnectionString, insertQuery, insertParams);
         }

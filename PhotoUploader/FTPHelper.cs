@@ -91,6 +91,9 @@ namespace PhotoUploader
 
         public static void UploadFileToServer(string targetURI, string filename)
         {
+            //TODO: Check that the file doesn't already exist before uploading
+            // See: http://stackoverflow.com/questions/347897/how-to-check-if-file-exists-on-ftp-before-ftpwebrequest
+
             // Create a Uri instance with the specified URI string.
             // If the URI is not correctly formed, the Uri constructor
             // will throw an exception.

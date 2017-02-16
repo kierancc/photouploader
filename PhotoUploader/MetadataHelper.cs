@@ -24,6 +24,13 @@ namespace PhotoUploader
             set { getTags = value; }
         }
 
+        protected bool getDateTaken;
+        public bool GetDateTaken
+        {
+            get { return getDateTaken; }
+            set { getDateTaken = value; }
+        }
+
         public void GetPhotoMetadata(PhotoDetail photo)
         {
             if (getGPSCoordinates)
@@ -31,13 +38,13 @@ namespace PhotoUploader
                 GetGPSCoordinatesFromPhoto(photo);
             }
 
-            if (getTags)
+            if (getTags || getDateTaken)
             {
-                GetPhotoTags(photo);
+                GetBitmapMetadata(photo);
             }
         }
 
-        protected void GetPhotoTags(PhotoDetail photo)
+        protected void GetBitmapMetadata(PhotoDetail photo)
         {
             using (FileStream fs = new FileStream(photo.FQPath, FileMode.Open))
             {
@@ -45,13 +52,23 @@ namespace PhotoUploader
                 BitmapMetadata metadata = decoder.Frames[0].Metadata as BitmapMetadata;
 
                 string keywords = "";
+                string dateTaken = "";
 
                 if (null != metadata)
                 {
                     keywords = metadata.Keywords.Aggregate((old, val) => old + ";" + val);
+                    dateTaken = metadata.DateTaken;
                 }
 
-                photo.Tags = keywords;
+                if (getTags)
+                {
+                    photo.Tags = keywords;
+                }
+
+                if (getDateTaken && (!string.IsNullOrEmpty(dateTaken)))
+                {
+                    photo.DateTaken = DateTime.Parse(dateTaken);
+                }
 
                 fs.Close();
             }

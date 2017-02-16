@@ -13,6 +13,8 @@ namespace PhotoUploader
         protected Bitmap preview;
         protected String location;
         protected String tags;
+        protected DateTime? dateTaken;
+
 
         public PhotoDetail(String fqpath)
         {
@@ -23,6 +25,9 @@ namespace PhotoUploader
             latitude = 0;
             longitude = 0;
             preview = null; // We will lazy load these
+            location = "";
+            tags = "";
+            dateTaken = null;
         }
 
         ~PhotoDetail()
@@ -88,6 +93,20 @@ namespace PhotoUploader
         {
             get { return tags; }
             set { tags = value; }
+        }
+
+        public bool IsPublic
+        {
+            get
+            {
+                return (tags.IndexOf("Public", StringComparison.InvariantCultureIgnoreCase) >= 0);
+            }
+        }
+
+        public DateTime? DateTaken
+        {
+            get { return dateTaken; }
+            set { dateTaken = value; }
         }
     }
 }

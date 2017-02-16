@@ -38,13 +38,17 @@ namespace PhotoUploader
 
         public static void InsertPhotoMetadata(PhotoDetail photo)
         {
-            String insertQuery = "INSERT INTO `photos`(`filename`, `latitude`, `longitude`, `locationstring`, `tagsstring`) VALUES (@filename,@latitude,@longitude,@locationstring,@tagsstring)";
-            MySqlParameter[] insertParams = new MySqlParameter[5];
+            String insertQuery = "INSERT INTO `photos`(`filename`, `datetaken`, `latitude`, `longitude`, `locationstring`, `tagsstring`, `public`) " +
+                                 "VALUES (@filename,@datetaken,@latitude,@longitude,@locationstring,@tagsstring,@public) " +
+                                 "ON DUPLICATE KEY UPDATE `filename`=@filename, `datetaken`=@datetaken, `latitude`=@latitude, `longitude`=@longitude, `locationstring`=@locationstring, `tagsstring`=@tagsstring, `public`=@public";
+            MySqlParameter[] insertParams = new MySqlParameter[7];
             insertParams[0] = new MySqlParameter("@filename", photo.FileName);
-            insertParams[1] = new MySqlParameter("@latitude", photo.Latitude);
-            insertParams[2] = new MySqlParameter("@longitude", photo.Longitude);
-            insertParams[3] = new MySqlParameter("@locationstring", photo.Location);
-            insertParams[4] = new MySqlParameter("@tagsstring", photo.Tags);
+            insertParams[1] = new MySqlParameter("@datetaken", photo.DateTaken);
+            insertParams[2] = new MySqlParameter("@latitude", photo.Latitude);
+            insertParams[3] = new MySqlParameter("@longitude", photo.Longitude);
+            insertParams[4] = new MySqlParameter("@locationstring", photo.Location);
+            insertParams[5] = new MySqlParameter("@tagsstring", photo.Tags);
+            insertParams[6] = new MySqlParameter("@public", photo.IsPublic);
 
             int rc = MySqlHelper.ExecuteNonQuery(ConnectionString, insertQuery, insertParams);
         }

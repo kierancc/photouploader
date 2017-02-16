@@ -28,7 +28,10 @@ namespace PhotoUploader
 
         private void lbPhotos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pbPreview.Image = ((PhotoDetail)lbPhotos.SelectedItem).Preview;
+            if (lbPhotos.SelectedItem != null)
+            {
+                pbPreview.Image = ((PhotoDetail)lbPhotos.SelectedItem).Preview;
+            }
         }
 
         private void btnUpload_Click(object sender, EventArgs e)
@@ -40,11 +43,13 @@ namespace PhotoUploader
             bool uploadLocationString = cbLocationString.Checked;
             bool uploadPhoto = cbPhoto.Checked;
             bool doTags = cbTags.Checked;
+            bool doDateTaken = cbDateTaken.Checked;
             bool uploadTags = cbTags.Checked;
 
             MetadataHelper mh = new MetadataHelper();
             mh.GetGPSCoordinates = doGPSCoords;
             mh.GetTags = doTags;
+            mh.GetDateTaken = doDateTaken;
 
             foreach (PhotoDetail pd in lbPhotos.Items)
             {

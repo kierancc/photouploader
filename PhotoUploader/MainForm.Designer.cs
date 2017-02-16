@@ -38,25 +38,27 @@
             this.cbGPS = new System.Windows.Forms.CheckBox();
             this.cbLocationString = new System.Windows.Forms.CheckBox();
             this.cbTags = new System.Windows.Forms.CheckBox();
+            this.cbDateTaken = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // lbPhotos
             // 
             this.lbPhotos.FormattingEnabled = true;
-            this.lbPhotos.Location = new System.Drawing.Point(556, 6);
-            this.lbPhotos.Margin = new System.Windows.Forms.Padding(2);
+            this.lbPhotos.ItemHeight = 25;
+            this.lbPhotos.Location = new System.Drawing.Point(1112, 12);
+            this.lbPhotos.Margin = new System.Windows.Forms.Padding(4);
             this.lbPhotos.Name = "lbPhotos";
-            this.lbPhotos.Size = new System.Drawing.Size(228, 368);
+            this.lbPhotos.Size = new System.Drawing.Size(452, 704);
             this.lbPhotos.TabIndex = 0;
             this.lbPhotos.SelectedIndexChanged += new System.EventHandler(this.lbPhotos_SelectedIndexChanged);
             // 
             // btnLoadPhotos
             // 
-            this.btnLoadPhotos.Location = new System.Drawing.Point(440, 6);
-            this.btnLoadPhotos.Margin = new System.Windows.Forms.Padding(2);
+            this.btnLoadPhotos.Location = new System.Drawing.Point(880, 12);
+            this.btnLoadPhotos.Margin = new System.Windows.Forms.Padding(4);
             this.btnLoadPhotos.Name = "btnLoadPhotos";
-            this.btnLoadPhotos.Size = new System.Drawing.Size(112, 30);
+            this.btnLoadPhotos.Size = new System.Drawing.Size(224, 58);
             this.btnLoadPhotos.TabIndex = 1;
             this.btnLoadPhotos.Text = "Load Photos";
             this.btnLoadPhotos.UseVisualStyleBackColor = true;
@@ -64,30 +66,32 @@
             // 
             // btnClearPhotos
             // 
-            this.btnClearPhotos.Location = new System.Drawing.Point(440, 40);
-            this.btnClearPhotos.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearPhotos.Location = new System.Drawing.Point(880, 77);
+            this.btnClearPhotos.Margin = new System.Windows.Forms.Padding(4);
             this.btnClearPhotos.Name = "btnClearPhotos";
-            this.btnClearPhotos.Size = new System.Drawing.Size(112, 30);
+            this.btnClearPhotos.Size = new System.Drawing.Size(224, 58);
             this.btnClearPhotos.TabIndex = 1;
             this.btnClearPhotos.Text = "Clear Photos";
             this.btnClearPhotos.UseVisualStyleBackColor = true;
             // 
             // pbPreview
             // 
-            this.pbPreview.Location = new System.Drawing.Point(6, 6);
-            this.pbPreview.Margin = new System.Windows.Forms.Padding(2);
+            this.pbPreview.Location = new System.Drawing.Point(12, 12);
+            this.pbPreview.Margin = new System.Windows.Forms.Padding(4);
+            this.pbPreview.MaximumSize = new System.Drawing.Size(862, 706);
+            this.pbPreview.MinimumSize = new System.Drawing.Size(862, 706);
             this.pbPreview.Name = "pbPreview";
-            this.pbPreview.Size = new System.Drawing.Size(431, 367);
-            this.pbPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbPreview.Size = new System.Drawing.Size(862, 706);
+            this.pbPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbPreview.TabIndex = 2;
             this.pbPreview.TabStop = false;
             // 
             // btnUpload
             // 
-            this.btnUpload.Location = new System.Drawing.Point(440, 344);
-            this.btnUpload.Margin = new System.Windows.Forms.Padding(2);
+            this.btnUpload.Location = new System.Drawing.Point(880, 662);
+            this.btnUpload.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(112, 30);
+            this.btnUpload.Size = new System.Drawing.Size(224, 58);
             this.btnUpload.TabIndex = 1;
             this.btnUpload.Text = "Upload Photos";
             this.btnUpload.UseVisualStyleBackColor = true;
@@ -96,9 +100,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(443, 230);
+            this.label1.Location = new System.Drawing.Point(884, 409);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 13);
+            this.label1.Size = new System.Drawing.Size(168, 25);
             this.label1.TabIndex = 3;
             this.label1.Text = "Data To Upload:";
             // 
@@ -107,9 +112,10 @@
             this.cbPhoto.AutoSize = true;
             this.cbPhoto.Checked = true;
             this.cbPhoto.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPhoto.Location = new System.Drawing.Point(446, 246);
+            this.cbPhoto.Location = new System.Drawing.Point(890, 440);
+            this.cbPhoto.Margin = new System.Windows.Forms.Padding(6);
             this.cbPhoto.Name = "cbPhoto";
-            this.cbPhoto.Size = new System.Drawing.Size(54, 17);
+            this.cbPhoto.Size = new System.Drawing.Size(100, 29);
             this.cbPhoto.TabIndex = 4;
             this.cbPhoto.Text = "Photo";
             this.cbPhoto.UseVisualStyleBackColor = true;
@@ -119,9 +125,10 @@
             this.cbGPS.AutoSize = true;
             this.cbGPS.Checked = true;
             this.cbGPS.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbGPS.Location = new System.Drawing.Point(446, 269);
+            this.cbGPS.Location = new System.Drawing.Point(890, 481);
+            this.cbGPS.Margin = new System.Windows.Forms.Padding(6);
             this.cbGPS.Name = "cbGPS";
-            this.cbGPS.Size = new System.Drawing.Size(107, 17);
+            this.cbGPS.Size = new System.Drawing.Size(210, 29);
             this.cbGPS.TabIndex = 4;
             this.cbGPS.Text = "GPS Coordinates";
             this.cbGPS.UseVisualStyleBackColor = true;
@@ -131,9 +138,10 @@
             this.cbLocationString.AutoSize = true;
             this.cbLocationString.Checked = true;
             this.cbLocationString.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbLocationString.Location = new System.Drawing.Point(446, 292);
+            this.cbLocationString.Location = new System.Drawing.Point(890, 522);
+            this.cbLocationString.Margin = new System.Windows.Forms.Padding(6);
             this.cbLocationString.Name = "cbLocationString";
-            this.cbLocationString.Size = new System.Drawing.Size(97, 17);
+            this.cbLocationString.Size = new System.Drawing.Size(188, 29);
             this.cbLocationString.TabIndex = 4;
             this.cbLocationString.Text = "Location String";
             this.cbLocationString.UseVisualStyleBackColor = true;
@@ -143,18 +151,34 @@
             this.cbTags.AutoSize = true;
             this.cbTags.Checked = true;
             this.cbTags.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTags.Location = new System.Drawing.Point(446, 316);
+            this.cbTags.Location = new System.Drawing.Point(889, 563);
+            this.cbTags.Margin = new System.Windows.Forms.Padding(6);
             this.cbTags.Name = "cbTags";
-            this.cbTags.Size = new System.Drawing.Size(50, 17);
+            this.cbTags.Size = new System.Drawing.Size(92, 29);
             this.cbTags.TabIndex = 5;
             this.cbTags.Text = "Tags";
             this.cbTags.UseVisualStyleBackColor = true;
             // 
+            // cbDateTaken
+            // 
+            this.cbDateTaken.AutoSize = true;
+            this.cbDateTaken.Checked = true;
+            this.cbDateTaken.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDateTaken.Location = new System.Drawing.Point(889, 601);
+            this.cbDateTaken.Name = "cbDateTaken";
+            this.cbDateTaken.Size = new System.Drawing.Size(155, 29);
+            this.cbDateTaken.TabIndex = 6;
+            this.cbDateTaken.Text = "Date Taken";
+            this.cbDateTaken.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 379);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(1574, 729);
+            this.Controls.Add(this.cbDateTaken);
             this.Controls.Add(this.cbTags);
             this.Controls.Add(this.cbLocationString);
             this.Controls.Add(this.cbGPS);
@@ -165,7 +189,8 @@
             this.Controls.Add(this.btnClearPhotos);
             this.Controls.Add(this.btnLoadPhotos);
             this.Controls.Add(this.lbPhotos);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "Photo Uploader";
             ((System.ComponentModel.ISupportInitialize)(this.pbPreview)).EndInit();
@@ -186,6 +211,7 @@
         private System.Windows.Forms.CheckBox cbGPS;
         private System.Windows.Forms.CheckBox cbLocationString;
         private System.Windows.Forms.CheckBox cbTags;
+        private System.Windows.Forms.CheckBox cbDateTaken;
     }
 }
 

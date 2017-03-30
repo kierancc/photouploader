@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PhotoUploader
@@ -51,8 +52,15 @@ namespace PhotoUploader
             mh.GetTags = doTags;
             mh.GetDateTaken = doDateTaken;
 
+            // Set up the progress window
+            ProgressWindow pw = new ProgressWindow(lbPhotos.Items.Count);
+            pw.Show(this);
+
             foreach (PhotoDetail pd in lbPhotos.Items)
             {
+                //removeme
+                Thread.Sleep(1000);
+
                 Console.Write("Processing file: " + pd.FileName + " ...");
 
                 // Load metadata from the image
@@ -99,20 +107,34 @@ namespace PhotoUploader
 
                 // TODO: Refactor the metadata update to allow partial metadata updating
                 // Next update the DB table with associated photo metadata
-                try
+                if (uploadGPS || uploadLocationString || uploadTags)
                 {
-                    DBHelper.InsertPhotoMetadata(pd);
-                }
-                catch (Exception ex)
-                {
-                    //TODO: if inserting the photo data to DB fails we should delete the photo
-                    Console.WriteLine();
-                    Console.WriteLine("Failed to insert photo metadata to database. ex: " + ex.Message);
-                    continue;
+                    try
+                    {
+                        DBHelper.InsertPhotoMetadata(pd);
+                    }
+                    catch (Exception ex)
+                    {
+                        //TODO: if inserting the photo data to DB fails we should delete the photo
+                        Console.WriteLine();
+                        Console.WriteLine("Failed to insert photo metadata to database. ex: " + ex.Message);
+                        continue;
+                    }
                 }
 
                 Console.WriteLine(" Complete");
+
+                pw.PerformStep();
             }
+
+            pw.Close();
+        }
+
+        private void btnClearPhotos_Click(object sender, EventArgs e)
+        {
+            pbPreview.Image = null;
+            lbPhotos.ClearSelected();
+            lbPhotos.Items.Clear();
         }
     }
 }

@@ -73,6 +73,7 @@
             this.btnClearPhotos.TabIndex = 1;
             this.btnClearPhotos.Text = "Clear Photos";
             this.btnClearPhotos.UseVisualStyleBackColor = true;
+            this.btnClearPhotos.Click += new System.EventHandler(this.btnClearPhotos_Click);
             // 
             // pbPreview
             // 

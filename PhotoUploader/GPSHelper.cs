@@ -25,7 +25,7 @@ namespace PhotoUploader
                             String responseString = responseContent.ReadAsStringAsync().Result;
                             Location resultLocation = JsonConvert.DeserializeObject<Location>(responseString);
 
-                            if (resultLocation.status != "OK")
+                            if (resultLocation.status != "OK" && resultLocation.status != "ZERO_RESULTS")
                             {
                                 throw new Exception("Reverse geocoding request rejected with status: " + resultLocation.status);
                             }
